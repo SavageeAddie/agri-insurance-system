@@ -1,5 +1,6 @@
 import type { Principal } from '@dfinity/principal';
 import type { ActorMethod } from '@dfinity/agent';
+import type { IDL } from '@dfinity/candid';
 
 export interface CropInsurance {
   'id' : bigint,
@@ -29,7 +30,8 @@ export interface DebtPayload {
   'creditor' : string,
 }
 export type Error = { 'InvalidInput' : { 'msg' : string } } |
-  { 'NotFound' : { 'msg' : string } };
+  { 'NotFound' : { 'msg' : string } } |
+  { 'InternalError' : { 'msg' : string } };
 export interface Escrow {
   'debt_id' : bigint,
   'created_at' : bigint,
@@ -45,25 +47,24 @@ export interface InsuranceClaimPayload {
   'insurance_id' : bigint,
   'claim_amount' : bigint,
 }
-export type Result = { 'Ok' : Escrow } |
+export type Result = { 'Ok' : Debt } |
   { 'Err' : Error };
-export type Result_1 = { 'Ok' : CropInsurance } |
+export type Result_1 = { 'Ok' : Escrow } |
   { 'Err' : Error };
-export type Result_2 = { 'Ok' : Debt } |
+export type Result_2 = { 'Ok' : CropInsurance } |
   { 'Err' : Error };
 export type Result_3 = { 'Ok' : InsuranceClaim } |
   { 'Err' : Error };
 export interface _SERVICE {
-  'add_debt' : ActorMethod<[DebtPayload], [] | [Debt]>,
-  'create_escrow' : ActorMethod<[EscrowPayload], Result>,
-  'get_crop_insurance' : ActorMethod<[bigint], Result_1>,
-  'get_debt' : ActorMethod<[bigint], Result_2>,
-  'get_escrow' : ActorMethod<[bigint], Result>,
+  'add_debt' : ActorMethod<[DebtPayload], Result>,
+  'create_escrow' : ActorMethod<[EscrowPayload], Result_1>,
+  'get_crop_insurance' : ActorMethod<[bigint], Result_2>,
+  'get_debt' : ActorMethod<[bigint], Result>,
+  'get_escrow' : ActorMethod<[bigint], Result_1>,
   'get_insurance_claim' : ActorMethod<[bigint], Result_3>,
-  'purchase_crop_insurance' : ActorMethod<
-    [CropInsurancePayload],
-    [] | [CropInsurance]
-  >,
+  'purchase_crop_insurance' : ActorMethod<[CropInsurancePayload], Result_2>,
   'submit_insurance_claim' : ActorMethod<[InsuranceClaimPayload], Result_3>,
-  'update_debt' : ActorMethod<[bigint, DebtPayload], Result_2>,
+  'update_debt' : ActorMethod<[bigint, DebtPayload], Result>,
 }
+export declare const idlFactory: IDL.InterfaceFactory;
+export declare const init: (args: { IDL: typeof IDL }) => IDL.Type[];

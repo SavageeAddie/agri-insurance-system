@@ -10,8 +10,7 @@ export { idlFactory } from "./icp_rust_boilerplate_backend.did.js";
  * beginning in dfx 0.15.0
  */
 export const canisterId =
-  process.env.CANISTER_ID_ICP_RUST_BOILERPLATE_BACKEND ||
-  process.env.ICP_RUST_BOILERPLATE_BACKEND_CANISTER_ID;
+  process.env.CANISTER_ID_ICP_RUST_BOILERPLATE_BACKEND;
 
 export const createActor = (canisterId, options = {}) => {
   const agent = options.agent || new HttpAgent({ ...options.agentOptions });
@@ -40,4 +39,4 @@ export const createActor = (canisterId, options = {}) => {
   });
 };
 
-export const icp_rust_boilerplate_backend = createActor(canisterId);
+export const icp_rust_boilerplate_backend = canisterId ? createActor(canisterId) : undefined;
